@@ -46,7 +46,7 @@ public:
     }
 
 
-    // Question 2
+    // Question 2: imitate and break if it is in the set
     int robotSim(vector<int>& commands, vector<vector<int>>& obstacles) {
         int x_coord = 0;
         int y_coord = 0;
@@ -86,7 +86,7 @@ public:
         }
         return result;
     }
-
+    // Question 3: binary search
     int minEatingSpeed(vector<int>& piles, int H) {
         int count_piles = (int)piles.size();
         int low = 1, high = *max_element(piles.begin(), piles.end());
@@ -105,7 +105,7 @@ public:
         return high;
     }
 
-    // Question 4: f(x) + f(x+1) = f(x+2)    using set to check if it is legal!
+    // Question 4: DP   {f(x) + f(x+1) = f(x+2)    using set to check if it is legal!}
     int lenLongestFibSubseq(vector<int>& A) {
         int result = 0;
         int dp[A.size()-1];
