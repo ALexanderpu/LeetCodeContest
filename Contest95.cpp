@@ -86,32 +86,23 @@ public:
 
     //4. Profitable Schemes    : g crimes   p minimum total profit for one combination
     // return how many schemes can be chosen
-    int profitableSchemes(int G, int P, vector<int>& grp, vector<int>& prf) {
-        vector<vector<int>> dp(P + 10, vector<int>(G + 10));
-        dp[0][0] = 1;
-
-        for (int i = 0; i < grp.size(); ++i) {
-            int ng = grp[i];
-            int pr = prf[i];
-
-            for (int j = P; j >= 0; --j) {
-
-                for (int k = G; k >= 0; --k) {
-
-                    if (k + ng > G) continue;   // what we need exceeds what we have
-
-                    if (!dp[j][k]) continue;
-
-                    int j1 = min(P, j + pr);
-                    (dp[j1][k + ng] += dp[j][k]) %= MOD;
+    int profitableSchemes(int G, int P, vector<int>& group, vector<int>& profit) {
+        int kMod = 1e9+7; //10^9+7
+        int num_tasks = group.size();
+        // 3 dimensional array:  for the top k tasks, the p profit obtained and the g people needed
+        vector<vector<vector<int>>> dp(num_tasks+1,vector<vector<int>>(P+1, vector<int>(G+1, 0)));
+        dp[0][0][0] = 1;
+        
+        for(int k = 1; k <= num_tasks; k++){
+            int p = profit[k-1];
+            int g = group[k-1];
+            for(int i = 0; i <= P; i++){
+                for(int j = 0; j <= G; j++){
+                    dp[k][i][j] = (dp[k-1][i][j] + (j < g ? 0 : dp[k-1][max(0, i-p)][j-g]))%kMod;  // choose the task or not(0/1背包)
                 }
             }
         }
-
-        int result = 0;
-        for (int i = 0; i <= G; ++i) //  add all possible number of people to commit crime need
-            (result += dp[P][i]) %= MOD;
-        return result;
+        return accumulate(begin(dp[num_tasks][P]), end(dp[num_tasks][P]), 0LL)%kMod;
     }
 };
 int main() {
